@@ -13,8 +13,21 @@ dependencies = []
 [project.optional-dependencies]
 dev = ["pytest", "ruff", "pip-tools"]
 
-[tool.ruff]
-line-length = 100
-
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",    # erreurs de style (pycodestyle)
+    "F",    # erreurs logiques (imports inutilisés, noms indéfinis)
+    "I",    # tri des imports (isort)
+    "UP",   # modernisation de la syntaxe (pyupgrade)
+    "B",    # pièges courants (bugbear)
+]
+
+[tool.ruff.format]
+quote-style = "double"
