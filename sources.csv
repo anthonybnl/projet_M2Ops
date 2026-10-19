@@ -1,0 +1,13 @@
+nom,type,region,acces,conditions,notes
+Courrier International,PQN,France,https://www.courrierinternational.com/feed/all/rss.xml,Informations absentes des CGVU,
+Franceinfo,PQN,France,https://www.franceinfo.fr/titres.rss,,
+L'actualité,PQN,France,https://lactualite.com/feed/,,
+L'express,PQN,France,https://www.lexpress.fr/arc/outboundfeeds/rss/alaune.xml,"Les flux RSS sont des fils de contenus. Chaque flux correspond à une rubrique ou une sous-rubrique du site. En vous abonnant à un flux, vous recevrez automatiquement le titre, résumé et URL des derniers articles publiés. Les flux RSS sont des fils de contenus. Chaque flux correspond à une rubrique ou une sous-rubrique du site. En vous abonnant à un flux, vous recevrez automatiquement le titre, résumé et URL des derniers articles publiés.Les flux RSS sont des fils de contenus. Chaque flux correspond à une rubrique ou une sous-rubrique du site. En vous abonnant à un flux, vous recevrez automatiquement le titre, résumé et URL des derniers articles publiés.",
+La Croix,PQN,France,https://www.la-croix.com/feeds/rss/site.xml,,
+Le Figaro,PQN,France,https://www.lefigaro.fr/rss/figaro_actualites.xml,,
+Le Monde,PQN,France,https://www.lemonde.fr/rss/une.xml,"Usage RSS limité au cadre personnel, non professionnel et non collectif ; autorisation nécessaire pour le projet collectif. Source : https://www.lemonde.fr/le-monde-et-vous/article/2025/07/14/les-flux-rss-du-monde-fr_5498778_3237.html",
+20 Minutes — Île-de-France,PQR,Île-de-France,https://www.20minutes.fr/feeds/rss-ile-de-france.xml,,
+ARS Île-de-France,PQR,Île-de-France,https://www.iledefrance.ars.sante.fr/rss.xml?type=ars_actualite,,
+Actu.fr — Île-de-France,PQR,Île-de-France,https://actu.fr/ile-de-france/rss.xml,,
+Le Parisien,PQR,Île-de-France,https://feeds.leparisien.fr/leparisien/rss,"Usage RSS limité au cadre personnel, non professionnel et non collectif ; autorisation à obtenir pour le projet collectif. Source : https://www.leparisien.fr/services/rss/ ; CGU : https://www.leparisien.fr/cgu/",
+Paris Match,PQR,France,https://www.parismatch.com/rss.xml,,
