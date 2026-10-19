@@ -54,7 +54,7 @@ def fetch(url: str) -> bytes:
 
 def collect_source(source: dict, storage: LocalStorage, day: str) -> None:
     slug = slugify(source["nom"])
-    fetched_at = datetime.now(timezone.utc)
+    fetched_at = datetime.now(datetime.UTC)
     xml = fetch(source["url"])
     storage.put(f"raw/xml/{day}/{slug}.xml", xml)
 
@@ -75,7 +75,7 @@ def main() -> int:
     )
     sources_file = os.environ.get("SOURCES_FILE", "sources.csv")
     storage = LocalStorage()
-    day = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    day = datetime.now(datetime.UTC).strftime("%Y-%m-%d")
 
     sources = read_sources(sources_file)
     log.info("%d sources à collecter (%s)", len(sources), sources_file)
