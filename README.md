@@ -6,7 +6,7 @@ Réalisation d'une pipeline de gazette matinale automatisée
 
 [Fichier `sources.csv`](./sources.csv)
 
-## Contribution
+## Contribution
 
 1. Création d'un environnement virtuel `python`
 
