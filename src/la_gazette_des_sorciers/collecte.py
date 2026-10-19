@@ -8,7 +8,7 @@ import re
 import sys
 import unicodedata
 import urllib.request
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 
 import xmltodict
