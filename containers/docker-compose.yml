@@ -1,0 +1,83 @@
+# Kestra (orchestrateur) + PostgreSQL (backend Kestra).
+# Kestra lance les étapes de la pipeline dans des conteneurs frères (image gazette:local)
+# via le socket Docker de l'hôte.
+#
+#   docker compose --profile build build   # construit l'image gazette:local
+#   docker compose up -d                   # démarre Kestra sur http://localhost:8080
+
+name: gazette
+
+volumes:
+  postgres-data:
+  kestra-data:
+
+services:
+  postgres:
+    image: postgres:16
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: kestra
+      POSTGRES_USER: kestra
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-kestra}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  kestra:
+    image: kestra/kestra:latest
+    user: root
+    command: server standalone
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    volumes:
+      - kestra-data:/app/storage
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      # Chemin ABSOLU côté hôte du dossier de données : les conteneurs lancés par
+      # Kestra le montent via le démon Docker. Disponible dans les flows : {{ envs.data_dir }}
+      ENV_DATA_DIR: ${DATA_DIR_HOST:?à définir dans containers/.env}
+      KESTRA_CONFIGURATION: |
+        datasources:
+          postgres:
+            url: jdbc:postgresql://postgres:5432/kestra
+            driverClassName: org.postgresql.Driver
+            username: kestra
+            password: ${POSTGRES_PASSWORD:-kestra}
+        kestra:
+          server:
+            basic-auth:
+              username: ${KESTRA_USER:-admin@kestra.io}
+              password: ${KESTRA_PASSWORD:-Admin1234}
+          repository:
+            type: postgres
+          storage:
+            type: local
+            local:
+              base-path: /app/storage
+          queue:
+            type: postgres
+          url: http://localhost:8080/
+          tutorialFlows:
+            enabled: false
+          # Les montages de volumes sont désactivés par défaut dans les tâches Docker.
+          plugins:
+            configurations:
+              - type: io.kestra.plugin.docker.Run
+                values:
+                  volume-enabled: true
+              - type: io.kestra.plugin.scripts.runner.docker.Docker
+                values:
+                  volume-enabled: true
+
+  # Image des scripts python (jamais démarrée ici, seulement construite).
+  gazette:
+    profiles: [build]
+    image: gazette:local
+    build:
+      context: ..

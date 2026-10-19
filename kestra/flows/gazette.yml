@@ -1,0 +1,36 @@
+id: gazette
+namespace: gazette
+
+description: |
+  Pipeline quotidienne : collecte des flux RSS (XML brut + JSON) puis nettoyage.
+  Chaque étape tourne dans un conteneur de l'image gazette:local
+  (docker compose --profile build build).
+
+tasks:
+  - id: collecte
+    type: io.kestra.plugin.docker.Run
+    containerImage: gazette:local
+    pullPolicy: NEVER
+    commands:
+      - python
+      - -m
+      - la_gazette_des_sorciers.collecte
+    volumes:
+      - "{{ envs.data_dir }}:/data"
+
+  - id: nettoyage
+    type: io.kestra.plugin.docker.Run
+    containerImage: gazette:local
+    pullPolicy: NEVER
+    commands:
+      - python
+      - -m
+      - la_gazette_des_sorciers.nettoyage
+    volumes:
+      - "{{ envs.data_dir }}:/data"
+
+triggers:
+  - id: tous-les-matins
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 6 * * *"
+    timezone: Europe/Paris

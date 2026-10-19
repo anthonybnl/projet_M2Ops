@@ -65,3 +65,5 @@ xmltodict==1.0.4
 # The following packages are considered to be unsafe in a requirements file:
 # pip
 # setuptools
+xmltodict==1.0.4
+    # via la_gazette_des_sorciers (pyproject.toml)
