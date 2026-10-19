@@ -1,0 +1,18 @@
+groups:
+  - name: gazette
+    rules:
+      - alert: EditionNonPubliee
+        # Seuil de test (120 s) : à passer à ~6h30 une fois Kestra branché.
+        expr: time() - gazette_edition_last_success_timestamp_seconds > 120
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Édition non publiée"
+      - alert: CibleInjoignable
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Cible {{ $labels.job }} injoignable"

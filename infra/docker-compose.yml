@@ -1,0 +1,30 @@
+services:
+  prometheus:
+    image: prom/prometheus
+    profiles: ["supervision"]
+    ports: [ "9090:9090" ]
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./rules.yml:/etc/prometheus/rules.yml
+  alertmanager:
+    image: prom/alertmanager
+    profiles: ["supervision"]
+    ports: [ "9093:9093" ]
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+      - --cluster.listen-address=
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - ./secrets/webhook_url:/etc/alertmanager/webhook_url:ro
+  grafana:
+    image: grafana/grafana
+    profiles: ["supervision"]
+    ports: [ "3000:3000" ]
+
+  loki:
+    image: grafana/loki:3.7.0
+    profiles: ["supervision"]
+    ports: [ "3100:3100" ]
+    volumes:
+      - ./loki-config.yml:/mnt/config/loki-config.yml
+    command: -config.file=/mnt/config/loki-config.yml

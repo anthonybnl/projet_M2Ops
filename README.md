@@ -50,6 +50,39 @@ docker build -t la_gazette_des_sorciers .
 docker run --rm la_gazette_des_sorciers
 ```
 
+## Supervision
+
+Stack : Prometheus + Alertmanager + Grafana (+ Loki). Les services sont derrière le profil Compose `supervision` : ils ne démarrent pas avec le pipeline.
+
+1. Créer le fichier secret de l'URL du webhook d'alerte
+
+```bash
+cp infra/secrets/webhook_url.example infra/secrets/webhook_url
+```
+
+Puis remplacer son contenu par l'URL réelle (une seule ligne).
+
+2. Démarrer la supervision
+
+```bash
+docker compose -f infra/docker-compose.yml --profile supervision up -d
+```
+
+3. Interfaces
+
+| Service | URL |
+| --- | --- |
+| Prometheus | http://localhost:9090 |
+| Alertmanager | http://localhost:9093 |
+| Grafana | http://localhost:3000 |
+| Loki | http://localhost:3100 |
+
+4. Arrêter la supervision
+
+```bash
+docker compose -f infra/docker-compose.yml --profile supervision down
+```
+
 ## Pour aller plus loin
 
 1. Génération du requirements.txt

@@ -6,3 +6,5 @@ __pycache__/
 dist/
 .env
 *.egg-info
+infra/secrets/*
+!infra/secrets/webhook_url.example
