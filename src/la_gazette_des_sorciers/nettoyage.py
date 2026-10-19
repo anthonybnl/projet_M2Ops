@@ -7,7 +7,7 @@ import json
 import logging
 import re
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, UTC
 from email.utils import parsedate_to_datetime
 
 from la_gazette_des_sorciers.storage import LocalStorage
@@ -44,8 +44,8 @@ def parse_date(raw: str) -> datetime | None:
         except ValueError:
             return None
     if dt.tzinfo is None:
-        dt = dt.replace(tzinfo=timezone.utc)
-    return dt.astimezone(timezone.utc)
+        dt = dt.replace(tzinfo=datetime.UTC)
+    return dt.astimezone(UTC)
 
 
 def atom_link(links) -> str:
@@ -110,7 +110,7 @@ def main() -> int:
         stream=sys.stdout,  # sur stderr, Kestra afficherait tous les logs en ERROR
     )
     parser = argparse.ArgumentParser()
-    parser.add_argument("--date", default=datetime.now(timezone.utc).strftime("%Y-%m-%d"))
+    parser.add_argument("--date", default=datetime.now(datetime.UTC).strftime("%Y-%m-%d"))
     parser.add_argument("--hours", type=int, default=24)
     args = parser.parse_args()
 
