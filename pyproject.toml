@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Pipeline de gazette matinale automatisée"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = ["requests>=2.0", "xmltodict>=1.0", "python-dotenv>=1.0"]
+dependencies = ["xmltodict>=1.0"]
 
 [project.optional-dependencies]
 dev = ["pytest", "ruff", "pip-tools"]
