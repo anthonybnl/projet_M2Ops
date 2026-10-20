@@ -4,3 +4,17 @@
 #
 #    pip-compile --output-file=requirements.txt pyproject.toml
 #
+certifi==2026.10.19
+    # via requests
+charset-normalizer==3.5.2
+    # via requests
+idna==3.20
+    # via requests
+python-dotenv==1.2.4
+    # via la_gazette_des_sorciers (pyproject.toml)
+requests==2.34.2
+    # via la_gazette_des_sorciers (pyproject.toml)
+urllib3==2.8.0
+    # via requests
+xmltodict==1.0.4
+    # via la_gazette_des_sorciers (pyproject.toml)
