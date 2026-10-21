@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: la_gazette_des_sorciers
+    ports:
+      - "5432:5432"
+
+  adminer:
+    image: adminer:6.1.2-standalone
+    ports:
+      - "8080:8080"

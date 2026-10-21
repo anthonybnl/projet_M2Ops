@@ -56,4 +56,19 @@ docker run --rm la_gazette_des_sorciers
 
 ```bash
 pip-compile pyproject.toml -o requirements.txt
+pip-compile pyproject.toml --extra=dev -o requirements-dev.txt
+```
+
+2. Lancement des migrations Alembic
+
+```bash
+alembic upgrade head
+```
+
+3. Création d'une migration
+
+Après avoir modifié les modèles de la base de données dans `db_models.py` :
+
+```bash
+alembic revision --autogenerate -m "Nom de la migration"
 ```
