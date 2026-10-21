@@ -52,7 +52,7 @@ def upsert_sources(
     rows: Iterable[Mapping[str, Any]],
     update_columns: Iterable[str],
 ) -> int:
-    """Insère ou met à jour les lignes sur `id`; seules `update_columns` sont écrasées en cas de conflit."""
+    """Insère ou met à jour les lignes sur `id`"""
     rows = list(rows)
     if not rows:
         return 0
