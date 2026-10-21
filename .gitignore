@@ -6,3 +6,6 @@ __pycache__/
 dist/
 .env
 *.egg-info
+
+# Données collectées localement
+data/
