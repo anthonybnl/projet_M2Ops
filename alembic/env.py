@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
-from la_gazette_des_sorciers.db_models import Base
+from la_gazette_des_sorciers.database.db_models import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
