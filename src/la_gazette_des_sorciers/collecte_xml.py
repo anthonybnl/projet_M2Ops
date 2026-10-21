@@ -144,6 +144,9 @@ if __name__ == "__main__":
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s %(levelname)s %(name)s %(message)s",
-        stream=sys.stdout,  # par default python est en stderr, Kestra afficherait tous sortie stderr en logs ERROR, donc on le passe en stdout
+        # par default python est en stderr, 
+        # Kestra afficherait tous sortie stderr en logs ERROR,
+        # donc on le passe en stdout
+        stream=sys.stdout,
     )
     main()
