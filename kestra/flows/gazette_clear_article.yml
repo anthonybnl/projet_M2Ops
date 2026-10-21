@@ -1,0 +1,11 @@
+id: gazette_clear_article
+namespace: gazette
+
+description: |
+  Nettoyage des articles : deuxième étape de la pipeline, après gazette_download_article.
+  Lit les JSON bruts de la collecte, ne garde que titre, résumé, lien, date et source,
+  retire le HTML, uniformise les dates en UTC, écarte les articles de plus de 24 h
+  et supprime les doublons. Produit un fichier d'articles propres, prêt à être chargé
+  par gazette_push_article.
+  L'étape tourne dans un conteneur de l'image gazette:local
+  (docker compose --profile build build).

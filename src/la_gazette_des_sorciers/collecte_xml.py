@@ -2,6 +2,7 @@ import csv
 import json
 import logging
 import os
+import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -55,7 +56,7 @@ def stocker(xml_data, source_id: str, source_url: str, fetched_at: datetime, sta
 
     fetched_at_str = fetched_at.isoformat()
 
-    base_filename = f"{fetched_at_str}_{source_id}"
+    base_filename = f"{fetched_at.strftime('%Y%m%dT%H%M%S%fZ')}_{source_id}"
 
     # on écrit le fichier XML
     xml_filepath = PATH / f"{base_filename}.xml"
@@ -68,7 +69,8 @@ def stocker(xml_data, source_id: str, source_url: str, fetched_at: datetime, sta
         "source_url": source_url,
         "fetched_at": fetched_at_str,
         "http_status": status_code,
-        "filepath": str(xml_filepath),
+        # relatif à DATA_DIR : un chemin absolu ne vaut que sur la machine qui l'a écrit
+        "filepath": xml_filepath.relative_to(DATA_DIR).as_posix(),
     }
     metadata_filepath = PATH / f"{base_filename}.json"
 
@@ -112,5 +114,6 @@ if __name__ == "__main__":
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s %(levelname)s %(name)s %(message)s",
+        stream=sys.stdout,  # par default python est en stderr, Kestra afficherait tous sortie stderr en logs ERROR, donc on le passe en stdout
     )
     main()
