@@ -7,7 +7,7 @@ import json
 import logging
 import re
 import sys
-from datetime import datetime, timedelta, UTC
+from datetime import UTC, datetime, timedelta
 from email.utils import parsedate_to_datetime
 
 from la_gazette_des_sorciers.storage import LocalStorage

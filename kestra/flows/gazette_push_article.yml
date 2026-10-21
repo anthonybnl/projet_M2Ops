@@ -1,0 +1,9 @@
+id: gazette_push_article
+namespace: gazette
+
+description: |
+  Chargement des articles nettoyés : dernière étape de la pipeline, après gazette_clear_article.
+  Envoie les articles propres vers le stockage des données traitées (PostgreSQL),
+  où ils serviront au clustering par thème et à l'édition de la gazette.
+  L'étape tourne dans un conteneur de l'image gazette:local
+  (docker compose --profile build build).

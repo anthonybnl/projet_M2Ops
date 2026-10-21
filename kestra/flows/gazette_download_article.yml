@@ -1,4 +1,4 @@
-id: gazette
+id: gazette_download_article
 namespace: gazette
 
 description: |
@@ -7,30 +7,31 @@ description: |
   (docker compose --profile build build).
 
 tasks:
-  - id: collecte
+  - id: collecte_xml
     type: io.kestra.plugin.docker.Run
     containerImage: gazette:local
     pullPolicy: NEVER
     commands:
       - python
       - -m
-      - la_gazette_des_sorciers.collecte
+      - la_gazette_des_sorciers.collecte_xml
     volumes:
       - "{{ envs.data_dir }}:/data"
 
-  - id: nettoyage
+  - id: collecte_json
     type: io.kestra.plugin.docker.Run
     containerImage: gazette:local
     pullPolicy: NEVER
     commands:
       - python
       - -m
-      - la_gazette_des_sorciers.nettoyage
+      - la_gazette_des_sorciers.collecte_json
     volumes:
       - "{{ envs.data_dir }}:/data"
 
 triggers:
-  - id: tous-les-matins
+  - id: tous-les-30M
     type: io.kestra.plugin.core.trigger.Schedule
-    cron: "0 6 * * *"
+    cron: "0,30 * * * *"
+    #cron: "/30 * * * *"
     timezone: Europe/Paris

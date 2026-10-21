@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -56,7 +57,7 @@ def traiter_fichier(fichier_metadonnees: Path):
 
     logger.info("Traitement de %s, %s", metadata["fetched_at"], metadata["source_id"])
 
-    xml_file_path = metadata["filepath"]
+    xml_file_path = DATA_DIR / metadata["filepath"]
     # on lit le fichier XML associé
     with open(xml_file_path, encoding="utf-8") as f:
         xml_content = f.read()
@@ -79,5 +80,6 @@ if __name__ == "__main__":
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s %(levelname)s %(name)s %(message)s",
+        stream=sys.stdout,  # par default python est en stderr, Kestra afficherait tous sortie stderr en logs ERROR, donc on le passe en stdout
     )
     main()
