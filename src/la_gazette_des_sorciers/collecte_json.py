@@ -37,7 +37,7 @@ def stocker_json(data: dict):
     PATH = JSON_DATA_DIR / fetched_at.strftime("%Y-%m-%d")
     PATH.mkdir(parents=True, exist_ok=True)
 
-    filename = f"{fetched_at_str}_{data['source_id']}.json"
+    filename = f"{fetched_at.strftime('%Y%m%dT%H%M%S%fZ')}_{data['source_id']}.json"
 
     with open(PATH / filename, "w", encoding="utf-8") as f:
         json.dump(
@@ -69,6 +69,7 @@ def traiter_fichier(fichier_metadonnees: Path):
 
 
 def main():
+    logger.info("JSON data directory: %s", JSON_DATA_DIR)
     fichiers = recuperer_fichiers_metadonnees()
     for fichier in fichiers:
         traiter_fichier(fichier)
