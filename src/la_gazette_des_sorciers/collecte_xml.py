@@ -1,12 +1,16 @@
-import csv
 import json
 import logging
 import os
 from datetime import UTC, datetime
+from email.utils import format_datetime
 from pathlib import Path
 
 import requests
 from dotenv import load_dotenv
+
+from la_gazette_des_sorciers.database.crud_sources import list_sources
+from la_gazette_des_sorciers.database.db import SessionLocal
+from la_gazette_des_sorciers.database.db_models import Sources
 
 load_dotenv()
 
@@ -15,35 +19,55 @@ logger = logging.getLogger("collecte_xml")
 USER_AGENT = "Mozilla/5.0 (la_gazette_des_sorciers)"
 TIMEOUT_S = 30
 
-SOURCES_FILE = Path(os.environ["SOURCES_FILE"]).resolve()
 DATA_DIR = Path(os.environ["DATA_DIR"]).resolve()
 
 XML_DATA_DIR = DATA_DIR / "xml"
 
 
-def read_sources(path: str | Path) -> list[dict]:
-    sources, seen = [], set()
-    with open(path, newline="", encoding="utf-8") as f:
-        for row in csv.DictReader(f):
-            url = (row.get("acces") or "").split("|")[0]
-            if not url.startswith("http") or url in seen:
-                continue
-            seen.add(url)
-            sources.append(
-                {
-                    "id": row["id"],
-                    "nom": row["nom"],
-                    "type": row["type"],
-                    "region": row["region"],
-                    "url": url,
-                }
-            )
-    return sources
+def recuperer_sources() -> list[Sources]:
+    with SessionLocal() as session:
+        data = list_sources(session, actif=True)
+    return data
 
 
-def fetch(url: str) -> tuple[bytes, int]:
-    resp = requests.get(url, headers={"User-Agent": USER_AGENT}, timeout=TIMEOUT_S)
+def mettre_a_jour_source(source_id, etag=None, last_modified=None, derniere_reussite=None):
+    with SessionLocal() as session:
+        # on cherche une source par son id
+        source_bdd = session.query(Sources).filter(Sources.id == source_id).first()
+        if source_bdd:
+            if etag:
+                source_bdd.etag = etag
+            if last_modified:
+                source_bdd.last_modified = last_modified
+            if derniere_reussite:
+                source_bdd.derniere_reussite = derniere_reussite
+            session.commit()
+
+
+def fetch(source: Sources) -> tuple[bytes, int]:
+    headers = {"User-Agent": USER_AGENT}
+
+    if source.etag:
+        headers["If-None-Match"] = source.etag
+    if source.last_modified:
+        # la date est déja en UTC il faut juste ajouter le tz
+        last_modified_utc = source.last_modified.replace(tzinfo=UTC)
+        headers["If-Modified-Since"] = format_datetime(last_modified_utc, usegmt=True)
+
+    resp = requests.get(source.url_flux, headers=headers, timeout=TIMEOUT_S)
     resp.raise_for_status()
+
+    headers = resp.headers
+    etag = headers.get("etag")  # Récupération de l'en-tête ETag si présent
+    last_modified = headers.get(
+        "last-modified"
+    )  # Récupération de l'en-tête Last-Modified si présent
+
+    # on met à jour Etag, last-modified et la dernière réussite en BDD
+    mettre_a_jour_source(
+        source.id, etag=etag, last_modified=last_modified, derniere_reussite=datetime.now(UTC)
+    )
+
     return resp.content, resp.status_code
 
 
@@ -82,31 +106,35 @@ def stocker(xml_data, source_id: str, source_url: str, fetched_at: datetime, sta
         )
 
 
-def collecter_flux(source: dict) -> None:
+def collecter_flux(source: Sources) -> None:
 
     # métadonnées
     fetched_at = datetime.now(UTC)
-    source_id = source["id"]
-    source_url = source["url"]
+    source_id = source.id
+    source_url = source.url_flux
 
     # data
-    xml, status_code = fetch(source_url)
+    xml, status_code = fetch(source)
 
-    stocker(
-        xml,
-        source_id,
-        source_url,
-        fetched_at,
-        status_code,
-    )
+    # si code 304 (Not Modified), on ne stocke pas le fichier
+    if status_code == 304:
+        logger.info("Flux non modifié: %s", source.id)
+    else:
+        stocker(
+            xml,
+            source_id,
+            source_url,
+            fetched_at,
+            status_code,
+        )
+        logger.info("Flux collecté: %s", source.id)
 
 
 def main():
     logger.info("XML data directory: %s", XML_DATA_DIR)
-    sources = read_sources(SOURCES_FILE)
+    sources = recuperer_sources()
 
     for source in sources:
-        logger.info("Collecte du flux: %s", source["id"])
         collecter_flux(source)
 
 
