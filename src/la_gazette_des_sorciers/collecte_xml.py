@@ -55,7 +55,8 @@ def stocker(xml_data, source_id: str, source_url: str, fetched_at: datetime, sta
 
     fetched_at_str = fetched_at.isoformat()
 
-    base_filename = f"{fetched_at_str}_{source_id}"
+    # base_filename = f"{fetched_at_str}_{source_id}"
+    base_filename = f"{fetched_at.strftime('%Y%m%dT%H%M%S%fZ')}_{source_id}"
 
     # on écrit le fichier XML
     xml_filepath = PATH / f"{base_filename}.xml"
@@ -101,6 +102,7 @@ def collecter_flux(source: dict) -> None:
 
 
 def main():
+    logger.info("XML data directory: %s", XML_DATA_DIR)
     sources = read_sources(SOURCES_FILE)
 
     for source in sources:
