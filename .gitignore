@@ -11,3 +11,7 @@ dist/
 data/
 /data/
 /.local/
+
+# model
+model/
+model_cache/

@@ -89,8 +89,15 @@ docker run --rm la_gazette_des_sorciers
 1. Génération du requirements.txt
 
 ```bash
-pip-compile pyproject.toml -o requirements.txt
-pip-compile pyproject.toml --extra=dev -o requirements-dev.txt
+pip-compile pyproject.toml --extra-index-url https://download.pytorch.org/whl/cpu -o requirements.txt
+pip-compile pyproject.toml --extra=dev --extra-index-url https://download.pytorch.org/whl/cpu -o requirements-dev.txt
+```
+
+ou bien avec GPU pour les embeddings :
+
+```bash
+pip-compile pyproject.toml --extra-index-url https://download.pytorch.org/whl/cu132 -o requirements-gpu.txt
+pip-compile pyproject.toml --extra=dev --extra-index-url https://download.pytorch.org/whl/cu132 -o requirements-dev-gpu.txt
 ```
 
 2. Création d'une migration
