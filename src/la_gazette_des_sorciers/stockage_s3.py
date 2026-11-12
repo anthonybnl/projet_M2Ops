@@ -1,6 +1,5 @@
 """Dépose les fichiers de collecte bronze dans un stockage compatible S3."""
 
-import argparse
 import logging
 import os
 from datetime import date

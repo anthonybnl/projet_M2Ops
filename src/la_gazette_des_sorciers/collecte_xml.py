@@ -145,7 +145,7 @@ def stocker(
     deposer_fichier_avec_clef(client, bucket, metadata_cle, metadata_filepath, "application/json")
     deposer_fichier_avec_clef(client, bucket, xml_cle, xml_filepath, "application/xml")
 
-    # Si la variable STOCKER_AUSSI_EN_LOCAL est False, on supprime les fichiers locaux après stockage S3
+    # Si la variable STOCKER_AUSSI_EN_LOCAL est False, on supprime les fichiers locaux
     if not STOCKER_AUSSI_EN_LOCAL:
         xml_filepath.unlink()
         metadata_filepath.unlink()
