@@ -70,6 +70,22 @@ Le script réalise un upsert sur `id` : les sources existantes sont mises à jou
 python -m la_gazette_des_sorciers.main
 ```
 
+## Nettoyage des JSON bronze
+
+Le traitement enregistre les articles propres et les rejets dans PostgreSQL,
+avec une ligne dans `silver.executions_silver` pour chaque passage. La connexion
+utilise `DATABASE_URL` dans `.env`. Depuis la racine du dépôt, traiter une journée S3.
+
+```powershell
+python -m la_gazette_des_sorciers.nettoyage --prefixe json/2026-11-12/
+```
+
+Chaque passage archive deux rapports JSON dans `rapports/`, par source et par règle.
+
+Les paramètres, la lecture locale ou S3 et le chargement sont décrits dans
+[docs/preprocess.md](docs/preprocess.md). Les règles figurent dans
+[docs/qualite.md](docs/qualite.md).
+
 ## Docker
 
 1. Construction de l'image Docker
