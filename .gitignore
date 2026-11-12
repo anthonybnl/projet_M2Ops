@@ -9,3 +9,5 @@ dist/
 
 # fichier data local
 data/
+/data/
+/.local/
